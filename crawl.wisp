@@ -1,9 +1,10 @@
 (def jsdom (require "jsdom"))
 (def swig (require "swig"))
 (def http (require "http"))
+(def fs (require "fs"))
 (def client (.createClient (require "redis")))
 
-(def t "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' /><title>asian hotties</title><style>.container {max-width: 960px;} img {max-width: 100%;}</style></head><body><div class=\"container\">{% for content in contents %}<div><a href=\"{{content.href}}\">{{content.title}}{% if content.thumb_img %}<img src=\"{{content.thumb_img}}\" width=\"70\" height=\"69\" alt=\"\">{% endif %}</a></div>{% if content.big_img %}<img src=\"{{content.big_img}}\" >{% endif %}{% endfor %}</div></body></html>")
+(def t (.readFileSync fs "sub_reddit.html" {encoding "utf8"}))
 
 (defn endswith [str suffix] (if (== -1 (.indexOf str suffix (- (.-length str) (.-length suffix)))) false true))
 
@@ -65,7 +66,8 @@
                                    undefined
                                   )
                               )
-                             (def thumb_img (+ "https://501fun.dabin.info/proxy?url=" (.attr (.find (.$ window a) "img") "src")))
+                             (def img_src (.attr (.find (.$ window a) "img") "src"))
+                             (def thumb_img (if img_src (+ "https://501fun.dabin.info/proxy?url=" img_src) undefined))
                              (def entry (.find (.$ window p) "div.entry.unvoted"))
                              (def title (.text (.find (.$ window entry) "a.title")))
                              (.push r {href href title title thumb_img thumb_img big_img big_img})

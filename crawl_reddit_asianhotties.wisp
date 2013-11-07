@@ -1,6 +1,9 @@
 (def http (require "http"))
 (def client (.createClient (require "redis")))
 (def cp (require "child_process"))
+(def fs (require "fs"))
+
+(def uds "/tmp/reddit_asianhotties.sock")
 
 
 (defn get_reddit [r]
@@ -24,5 +27,5 @@
                  (fn [request response]
                    (get_reddit response))))
 
-(.listen server "/tmp/reddit_asianhotties.sock")
-
+(.listen server uds)
+(.chmodSync fs uds 666)

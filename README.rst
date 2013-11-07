@@ -10,4 +10,4 @@ run server::
     npm install swig
     npm install redis
 
-    sudo rm -rf reddit_asianhotties.sock && sudo -u www-data wisp crawl_reddit_using_zombie.wisp
+    rm -rf /tmp/reddit_asianhotties.sock && wisp crawl_reddit_using_zombie.wisp

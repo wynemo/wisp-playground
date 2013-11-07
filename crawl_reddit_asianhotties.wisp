@@ -28,4 +28,4 @@
                    (get_reddit response))))
 
 (.listen server uds)
-(.chmodSync fs uds 666)
+(.chmodSync fs uds 666)  ; every one can read write

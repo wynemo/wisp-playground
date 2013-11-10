@@ -16,4 +16,4 @@ compile wisp files to javascript::
     
 run server::    
     
-    node main.js 
+    ./compile.sh && node main.js 

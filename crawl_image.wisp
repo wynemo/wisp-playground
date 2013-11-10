@@ -3,8 +3,8 @@
 (def http (require "http"))
 (def fs (require "fs"))
 (def events (require "events"))
-(def url "http://images.4chan.org/wsg/src/1383887259972.gif")
-; (def emitter (new (.-EventEmitter events)))
+(def url "http://i.minus.com/iYLq6x8J0sout.gif")
+(def emitter (new (.-EventEmitter events)))
 
 (defn crawl_image [url]
   (def received 0)
@@ -14,6 +14,10 @@
   (def fd (.openSync fs dst "w"))
   (def net_count 0)
   (def fs_count 0)
+  (def finished 0)
+  (.on emitter "clean"
+       (fn []
+         (if (and (== 1 finished) (== net_count fs_count)) (.closeSync fs fd) 0)))
   (def req (.request http
                    url
                    (fn [response]
@@ -22,21 +26,21 @@
                           (fn [chunk]
                             (set! net_count (+ net_count 1))
                             (.write fs fd chunk 0 (.-length chunk) received (fn [err, written, buffer]
-                                                                               (set! fs_count (+ fs_count 1))
+                                                                              (set! fs_count (+ fs_count 1))
+                                                                              (.emit emitter "clean")
                                                                                
                             ))
                             (set! received (+ received (.-length chunk)))
                             ))
                      (.on response
                           "end"
-                          (fn clean [] ( if (== net_count fs_count) (.closeSync fs fd) (setTimeout clean 1)) ) )
+                          (fn [] (.emit emitter "clean")) )
                      )))
   (.on req
        "error"
        (fn [e]
          (.log console (.-message e))
          ))
-  (.end req)
-)
+  (.end req))
 
 (crawl_image url)

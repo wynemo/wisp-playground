@@ -17,7 +17,11 @@
   (def finished 0)
   (.on emitter "clean"
        (fn []
-         (if (and (== 1 finished) (== net_count fs_count)) (.closeSync fs fd) 0)))
+         (if (and (== 1 finished) (== net_count fs_count)) 
+             (do
+               (.closeSync fs fd)
+               (.log console "url is" (+ "http://dabin.info/static/ppp/" name)))
+             0)))
   (def req (.request http
                    url
                    (fn [response]
@@ -34,7 +38,9 @@
                             ))
                      (.on response
                           "end"
-                          (fn [] (.emit emitter "clean")) )
+                          (fn [] 
+                            (set! finished 1)
+                            (.emit emitter "clean")) )
                      )))
   (.on req
        "error"

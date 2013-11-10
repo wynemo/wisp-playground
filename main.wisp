@@ -27,6 +27,10 @@
   (def url (aget (.-query context) "url"))
   (.log console "url is" url)
   (def crawl (.spawn cp "node" ["crawl_image.js" url]))
+  (.on (.-stdout crawl) "data" (fn [data] (
+                                 .write r data)))
+  (.on (.-stderr crawl) "data" (fn [data] (
+                                 .write r data)))
   (.on crawl "close" (fn [code]
                      (.log console "crawl_image code is " code)
                      (.end r (+ "crawl_image code is " code))

@@ -3,7 +3,7 @@
 (def http (require "http"))
 (def fs (require "fs"))
 (def events (require "events"))
-(def url "http://i.minus.com/iYLq6x8J0sout.gif")
+(def url (aget (.-argv process) 2))
 (def emitter (new (.-EventEmitter events)))
 
 (defn crawl_image [url]

@@ -12,8 +12,8 @@ install requirements::
 
 compile wisp files to javascript::    
     
-    wisp <foo.wisp >foo.js
+    ./compile.sh *.wisp
     
 run server::    
     
-    ./compile.sh && node main.js 
+    ./compile.sh *.wisp && node main.js 

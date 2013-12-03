@@ -21,30 +21,30 @@
 <body>
 
     <script type="text/javascript">
-        $('.image').on('click', function () {
-        
-            if (!$(this).hasClass("image")
-            {
+    $(document).ready(function(){
+        $('.image').each(function(i) {
+            $(this).on('click', function () {
+                console.log($(this).attr("src"));
+                $(this).toggleClass("zoom");
+                if (!$(this).hasClass("zoom"))
+                {
+                    $(this).attr("src", $(this).attr("small-src"));
+                }
+                else
+                {
+                    var image = $(this);
+                    $.ajax({
+                       url: $(this).attr("large-src")
+                    }).done(function(a, b, c) {
+                        $(image).attr( "src", $(image).attr("large-src"));
+                    });
+                    
+                }
                 return false;
-            }
-            
-            $(this).toggleClass("zoom");
-            if (!$(this).hasClass("zoom"))
-            {
-                $(this).attr("src", $(this).attr("small-src"));
-            }
-            else
-            {
-                var image = $(this);
-                $.ajax({
-                   url: $(this).attr("large-src")
-                }).done(function(a, b, c) {
-                    $( image ).attr( "src", $(image).attr("large-src"));
-                });
-                
-            }
-            return false;
+            });
         });
+        
+    });  
     </script>
 
     <div class="container">
@@ -54,7 +54,7 @@
         </div>
         {% if content.thumb_img %}<img src="{{content.thumb_img}}"
             {% if content.big_img %} large-src="{{content.big_img}}" class="image" small-src="{{content.thumb_img}}" {% endif %}
-            width="70" height="69" alt="Click to zoom"/>{% endif %}
+             alt="Click to zoom"/>{% endif %}
     {% endfor %}
     </div>
 </body>

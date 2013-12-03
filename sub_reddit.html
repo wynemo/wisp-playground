@@ -11,11 +11,11 @@
 <div class="container">
 {% for content in contents %}
     <div>
-    <a href="{{content.href}}">{{content.title}}{% if content.thumb_img %}<img src="{{content.thumb_img}}" width="70" height="69" alt="">{% endif %}</a>
+        <a href="{{content.href}}">{{content.title}}</a>
     </div>
-    {% if content.big_img %}
-        <img src="{{content.big_img}}" >
-    {% endif %}
+    {% if content.thumb_img %}<img src="{{content.thumb_img}}"
+        {% if content.big_img %} large-src="{{content.big_img}}" class="image" small-src="{{content.thumb_img}}" {% endif %}
+        width="70" height="69" alt=""/>{% endif %}
 {% endfor %}
 </div>
 </body>

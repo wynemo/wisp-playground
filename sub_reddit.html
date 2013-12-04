@@ -3,7 +3,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
     <title>asian hotties crawled from reddit</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- <script src="https://dn-staticfile.qbox.me/jquery/1.9.1/jquery.min.js"></script> -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <style type="text/css">
         .container {
             max-width: 960px;}
@@ -24,7 +25,6 @@
     $(document).ready(function(){
         $('.image').each(function(i) {
             $(this).on('click', function () {
-                console.log($(this).attr("src"));
                 $(this).toggleClass("zoom");
                 if (!$(this).hasClass("zoom"))
                 {
@@ -32,13 +32,7 @@
                 }
                 else
                 {
-                    var image = $(this);
-                    $.ajax({
-                       url: $(this).attr("large-src")
-                    }).done(function(a, b, c) {
-                        $(image).attr( "src", $(image).attr("large-src"));
-                    });
-                    
+                    $(this).attr( "src", $(this).attr("large-src"));
                 }
                 return false;
             });

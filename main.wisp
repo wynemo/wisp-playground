@@ -49,6 +49,7 @@
   (.createServer http
                  (fn [request response]
                    (def parse_obj (.parse url (.-url request) true))
+                   (.log console (.-headers request))
                    (def path (.-pathname parse_obj))
                    (if (endswith path "/") (set! path (.substr path 0 (- (.-length path) 1))) 0)
                    (.log console path)

@@ -3,7 +3,7 @@
 (def cp (require "child_process"))
 (def fs (require "fs"))
 (def url (require "url"))
-(def geo (require "geo"))
+(def geo (require "./geo"))
 
 (def uds "/tmp/reddit_asianhotties.sock")
 

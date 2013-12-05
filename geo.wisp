@@ -1,3 +1,5 @@
+(def http (require "http"))
+
 (defn get_country [ip cb]
   (def url "http://freegeoip.net/json/")
   (set! url (+ url ip))

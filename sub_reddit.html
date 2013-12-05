@@ -12,7 +12,7 @@
             max-width: 100%;
         }
         
-        .image {
+        .image, .big_image {
             cursor: url("//s.imgur.com/include/magnify.cur"), default;
         }
     </style>
@@ -27,11 +27,23 @@
                 $(this).toggleClass("zoom");
                 if (!$(this).hasClass("zoom"))
                 {
-                    $(this).attr("src", $(this).attr("small-src"));
+                    return false;
                 }
                 else
                 {
-                    $(this).attr( "src", $(this).attr("large-src"));
+                    $(this).siblings(".loading_gif").css("display", "");
+                    var small_image = this;
+                    var large_image = "<img style=\"display: none;\" src=\"" + $(this).attr("large-src") + "\"></img>";
+                    $(this).siblings(".big_image").append(large_image);
+                    $(this).siblings(".big_image").children().on("load", function () {
+                        $(small_image).siblings(".loading_gif").css("display", "none");
+                        $(small_image).css("display", "none");
+                        $(small_image).removeClass("zoom");
+                        $(this).css("display", "");
+                    }).on("click", function () {
+                        $(this).css("display", "none");
+                        $(small_image).css("display", "");
+                    });
                 }
                 return false;
             });
@@ -45,9 +57,14 @@
         <div>
             <a href="{{content.href}}">{{content.title}}</a>
         </div>
-        {% if content.thumb_img %}<img src="{{content.thumb_img}}"
-            {% if content.big_img %} large-src="{{content.big_img}}" class="image" small-src="{{content.thumb_img}}" {% endif %}
-             alt="Click to zoom"/>{% endif %}
+        <div>
+            {% if content.thumb_img %}<img src="{{content.thumb_img}}"
+                {% if content.big_img %} large-src="{{content.big_img}}" class="image" small-src="{{content.thumb_img}}" {% endif %}
+                 alt="Click to zoom"/>{% endif %}
+            <img style="margin: 27px 27px 27px -43px; display: none;" src="http://img.t.sinajs.cn/t5/style/images/common/loading.gif" class="loading_gif"/>
+            <div class="big_image">
+            </div>
+        </div>
     {% endfor %}
     </div>
 </body>

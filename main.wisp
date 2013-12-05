@@ -3,6 +3,7 @@
 (def cp (require "child_process"))
 (def fs (require "fs"))
 (def url (require "url"))
+(def geo (require "geo"))
 
 (def uds "/tmp/reddit_asianhotties.sock")
 
@@ -10,21 +11,26 @@
 
 
 (defn get_reddit [r context]
-  (.get client "missingkey" (fn [err, reply]
-                              (if (== err null)
-                                (if (== reply null)
-                                  (do
-                                    (def crawl (.spawn cp "node" ["crawl_asianhotties.js"]))
-                                    (.on crawl "close" (fn [code]
-                                                         (.log console "code is " code)
-                                                         (.get client "missingkey" (fn [err, reply](.end r reply)))))
-                                    )
-                                  (.end r reply)
-                                  )
-                                (.end r "error")))))
+  (def x-real-ip (aget context "x-real-ip"))
+  (.get_country geo x-real-ip (fn [country]
+                                (.log console country)
+                                (.get client "missingkey" (fn [err, reply]
+                                  (if (== err null)
+                                    (if (== reply null)
+                                      (do
+                                        (def crawl (.spawn cp "node" ["crawl_asianhotties.js"]))
+                                        (.on crawl "close" (fn [code]
+                                                             (.log console "code is " code)
+                                                             (.get client "missingkey" (fn [err, reply](.end r reply)))))
+                                        )
+                                      (.end r reply)
+                                      )
+                                    (.end r "error"))))
+                                )))
                                 
-(defn handle_crawl_image [r context] 
-  (def url (aget (.-query context) "url"))
+(defn handle_crawl_image [r context]
+  (def parse_obj (aget context "parse_obj"))
+  (def url (aget (.-query parse_obj) "url"))
   (.log console "url is" url)
   (def crawl (.spawn cp "node" ["crawl_image.js" url]))
   (.on (.-stdout crawl) "data" (fn [data] (
@@ -49,12 +55,13 @@
   (.createServer http
                  (fn [request response]
                    (def parse_obj (.parse url (.-url request) true))
-                   (.log console (.-headers request))
+                   (def x-real-ip (aget (.-headers request) "x-real-ip"))
                    (def path (.-pathname parse_obj))
                    (if (endswith path "/") (set! path (.substr path 0 (- (.-length path) 1))) 0)
                    (.log console path)
                    (def handler (aget routes path))
-                   (if handler (handler response parse_obj) (handle404 response 0))
+                   (def context {:parse_obj parse_obj :x-real-ip x-real-ip})
+                   (if handler (handler response context) (handle404 response 0))
                    )))
 
 (.unlinkSync fs uds)                   

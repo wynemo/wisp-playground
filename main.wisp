@@ -9,11 +9,16 @@
 
 (defn endswith [str suffix] (if (== -1 (.indexOf str suffix (- (.-length str) (.-length suffix)))) false true))
 
+(def world_cdn "<script src=\"https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js\"></script>")
+(def china_cdn "<script src=\"https://dn-staticfile.qbox.me/jquery/1.9.1/jquery.min.js\"></script>")
 
 (defn get_reddit [r context]
   (def x-real-ip (aget context "x-real-ip"))
   (.get_country geo x-real-ip (fn [country]
                                 (.log console country)
+                                (def cdn world_cdn)
+                                (if (== country "China")
+                                    (set! cdn china_cdn) 0)
                                 (.get client "missingkey" (fn [err, reply]
                                   (if (== err null)
                                     (if (== reply null)
@@ -21,9 +26,10 @@
                                         (def crawl (.spawn cp "node" ["crawl_asianhotties.js"]))
                                         (.on crawl "close" (fn [code]
                                                              (.log console "code is " code)
-                                                             (.get client "missingkey" (fn [err, reply](.end r reply)))))
+                                                             (.get client "missingkey" (fn [err, reply](
+                                                                .end r (.replace reply "%s" cdn))))))
                                         )
-                                      (.end r reply)
+                                      (.end r (.replace reply "%s" cdn))
                                       )
                                     (.end r "error"))))
                                 )))

@@ -9,8 +9,8 @@
 
 (defn endswith [str suffix] (if (== -1 (.indexOf str suffix (- (.-length str) (.-length suffix)))) false true))
 
-(def world_cdn "<script src=\"https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js\"></script>")
-(def china_cdn "<script src=\"https://dn-staticfile.qbox.me/jquery/1.9.1/jquery.min.js\"></script>")
+(def world_cdn "<script src=\"//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js\"></script>")
+(def china_cdn "<script src=\"//dn-staticfile.qbox.me/jquery/1.9.1/jquery.min.js\"></script>")
 
 (defn get_reddit [r context]
   (def x-real-ip (aget context "x-real-ip"))

@@ -1,6 +1,9 @@
+(defn startswith [str prefix] (if (== 0 (.indexOf str prefix 0)) true false))
+
 (def static_folder "/home/zdb/dot/static/ppp/")
 
 (def http (require "http"))
+(def https (require "https"))
 (def fs (require "fs"))
 (def events (require "events"))
 (def url (aget (.-argv process) 2))
@@ -22,7 +25,8 @@
                (.closeSync fs fd)
                (.log console "url is" (+ "http://dabin.info/static/ppp/" name)))
              0)))
-  (def req (.request http
+  (def fucking_http (if (startswith url "https") https http))
+  (def req (.request fucking_http
                    url
                    (fn [response]
                      (.on response

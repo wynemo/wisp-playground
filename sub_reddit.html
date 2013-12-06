@@ -31,11 +31,27 @@
                 }
                 else
                 {
-                    $(this).siblings(".loading_gif").css("display", "");
                     var small_image = this;
-                    var large_image = "<img style=\"display: none;\" src=\"" + $(this).attr("large-src") + "\"></img>";
+                    var timeout = setTimeout(function () {
+                        console.log("time out to load big image");
+                        $(small_image).siblings(".big_image").children().remove();
+                        $(small_image).removeClass("zoom");
+                        $(small_image).css("display", "");
+                        $(small_image).siblings(".loading_gif").css("display", "none");
+                    }, 45 * 1000);
+                    $(this).siblings(".loading_gif").css("display", "");
+                    var large_src = $(this).attr("large-src");
+                    var large_image = "<img style=\"display: none;\"></img>";
                     $(this).siblings(".big_image").append(large_image);
-                    $(this).siblings(".big_image").children().on("load", function () {
+                    $(this).siblings(".big_image").children().error(function () {
+                        console.log("error to load big image");
+                        clearTimeout(timeout);
+                        $(this).remove();
+                        $(small_image).removeClass("zoom");
+                        $(small_image).css("display", "");
+                        $(small_image).siblings(".loading_gif").css("display", "none");
+                    }).attr("src", large_src).on("load", function () {
+                        clearTimeout(timeout);
                         $(small_image).siblings(".loading_gif").css("display", "none");
                         $(small_image).css("display", "none");
                         $(small_image).removeClass("zoom");

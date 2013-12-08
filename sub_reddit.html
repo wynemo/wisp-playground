@@ -21,17 +21,21 @@
 <body>
 
     <script type="text/javascript">
+    var large_image = "<img style=\"display: none;\"></img>";
     $(document).ready(function(){
         $('.image').each(function(i) {
             $(this).on('click', function () {
-                $(this).toggleClass("zoom");
-                if (!$(this).hasClass("zoom"))
+                
+                if ($(this).hasClass("zoom"))
                 {
                     return false;
                 }
                 else
                 {
+                    $(this).addClass("zoom");
                     var small_image = this;
+                    $(this).siblings(".loading_gif").css("display", "");
+                    var large_src = $(this).attr("large-src");
                     var timeout = setTimeout(function () {
                         console.log("time out to load big image");
                         $(small_image).siblings(".big_image").children().remove();
@@ -39,9 +43,6 @@
                         $(small_image).css("display", "");
                         $(small_image).siblings(".loading_gif").css("display", "none");
                     }, 45 * 1000);
-                    $(this).siblings(".loading_gif").css("display", "");
-                    var large_src = $(this).attr("large-src");
-                    var large_image = "<img style=\"display: none;\"></img>";
                     $(this).siblings(".big_image").append(large_image);
                     $(this).siblings(".big_image").children().error(function () {
                         console.log("error to load big image");
@@ -59,6 +60,7 @@
                     }).on("click", function () {
                         $(this).css("display", "none");
                         $(small_image).css("display", "");
+                        $(this).remove();
                     });
                 }
                 return false;

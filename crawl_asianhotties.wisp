@@ -70,7 +70,10 @@
                              (def thumb_img (if img_src (+ "https://501fun.dabin.info/proxy?url=" img_src) undefined))
                              (def entry (.find (.$ window p) "div.entry.unvoted"))
                              (def title (.text (.find (.$ window entry) "a.title")))
-                             (.push r {href href title title thumb_img thumb_img big_img big_img})
+                             (def comments (.find (.$ window entry) "a.comments"))
+                             (def comments_link (.attr comments "href"))
+                             (def comments_text (.text comments))
+                             (.push r {href href title title thumb_img thumb_img big_img big_img comments_link comments_link comments_text comments_text})
                              (if (== i (- length 1))
                                (cb r)
                                1

@@ -4,6 +4,7 @@
 (def fs (require "fs"))
 (def url (require "url"))
 (def geo (require "./geo"))
+(def index (require "./index"))
 
 (def uds "/tmp/reddit_asianhotties.sock")
 
@@ -53,8 +54,15 @@
 (defn handle404 [r context]   
     (.writeHead r 404)
     (.end r "404"))
+    
+(defn handle_index [r context]
+  (.end r (.render_index index undefined)))
                                 
-(def routes {"/AsianHotties" (fn [r c] (get_reddit r  c)) "/crawlimage" (fn [r c] (handle_crawl_image r c))})
+(def routes
+  {"/AsianHotties" (fn [r c] (get_reddit r  c))
+   "/crawlimage" (fn [r c] (handle_crawl_image r c))
+   "/" (fn [r c] (handle_index r c))
+   })
 
 
 (def server 

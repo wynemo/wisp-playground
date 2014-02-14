@@ -38,8 +38,12 @@
 (defn handle_crawl_image [r context]
   (def parse_obj (aget context "parse_obj"))
   (def url (aget (.-query parse_obj) "url"))
+  (def to_redis (aget (.-query parse_obj) "redis"))
   (.log console "url is" url)
-  (def crawl (.spawn cp "node" ["crawl_image.js" url]))
+  (.log console "to_redis is" to_redis)
+  (def target (if to_redis "crawl_image_to_redis.js" "crawl_image.js"))
+  .log console "target is" target)
+  (def crawl (.spawn cp "node" [target url]))
   (.on (.-stdout crawl) "data" (fn [data] (
                                  .write r data)))
   (.on (.-stderr crawl) "data" (fn [data] (
@@ -49,6 +53,16 @@
                      (.end r (+ "crawl_image code is " code))
                      ))
   )
+  
+(defn handle_citr [r context]
+  (def request_url (aget context "request_url")) 
+  (.get client "request_url" (fn [err, reply]
+                                (if (== err null)
+                                  (if (== reply null)
+                                    (.end r "not exist")
+                                    (.end r reply)
+                                    )
+                                  (.end r "error")))))  
                                 
 
 (defn handle404 [r context]   
@@ -61,6 +75,7 @@
 (def routes
   {"/AsianHotties" (fn [r c] (get_reddit r  c))
    "/crawlimage" (fn [r c] (handle_crawl_image r c))
+   "/citr" (fn [r c] (handle_citr r c))
    "/" (fn [r c] (handle_index r c))
    })
 
@@ -76,7 +91,7 @@
                          0)
                    (.log console path)
                    (def handler (aget routes path))
-                   (def context {:parse_obj parse_obj :x-real-ip x-real-ip})
+                   (def context {:parse_obj parse_obj :x-real-ip x-real-ip :request_url (.-url request)})
                    (if handler (handler response context) (handle404 response 0))
                    )))
 

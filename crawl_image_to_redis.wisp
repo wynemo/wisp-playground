@@ -23,7 +23,8 @@
                           (fn []
                             (def key (+ citr name))
                             (.set client key s)
-                            (.expire client key 3600)))
+                            (.expire client key 3600)
+                            (.log console "url is" (+ "https://ssl.dabin.info/" key))))
                      )))
   (.on req
        "error"

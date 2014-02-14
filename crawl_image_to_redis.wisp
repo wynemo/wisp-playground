@@ -24,14 +24,15 @@
                             (def key (+ citr name))
                             (.set client key s)
                             (.expire client key 3600)
-                            (.log console "url is" (+ "https://ssl.dabin.info/" key))))
+                            (.log console "url is" (+ "https://ssl.dabin.info/" key))
+                            (.exit process 0)))
                      )))
   (.on req
        "error"
        (fn [e]
          (.log console (.-message e))
+         (.exit process -1)
          ))
   (.end req))
 
 (crawl_image url)
-(.exit process 0) 

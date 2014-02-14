@@ -42,7 +42,7 @@
   (.log console "url is" url)
   (.log console "to_redis is" to_redis)
   (def target (if to_redis "crawl_image_to_redis.js" "crawl_image.js"))
-  .log console "target is" target)
+  (.log console "target is" target)
   (def crawl (.spawn cp "node" [target url]))
   (.on (.-stdout crawl) "data" (fn [data] (
                                  .write r data)))

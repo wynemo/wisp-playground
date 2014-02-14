@@ -73,10 +73,10 @@
   (.end r (.render_index index undefined)))
                                 
 (def routes
-  {"/AsianHotties" (fn [r c] (get_reddit r  c))
-   "/crawlimage" (fn [r c] (handle_crawl_image r c))
-   "/citr" (fn [r c] (handle_citr r c))
-   "/" (fn [r c] (handle_index r c))
+  {"AsianHotties" (fn [r c] (get_reddit r  c))
+   "crawlimage" (fn [r c] (handle_crawl_image r c))
+   "citr" (fn [r c] (handle_citr r c))
+   "" (fn [r c] (handle_index r c))
    })
 
 

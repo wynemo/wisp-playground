@@ -55,8 +55,11 @@
   )
   
 (defn handle_citr [r context]
-  (def request_url (aget context "request_url")) 
-  (.get client "request_url" (fn [err, reply]
+  (def request_url (aget context "request_url"))
+  (if (and (endswith request_url "/") (> (.-length request_url) 1))
+    (set! request_url (.substr request_url 0 (- (.-length request_url) 1)))
+    0)
+  (.get client request_url (fn [err, reply]
                                 (if (== err null)
                                   (if (== reply null)
                                     (.end r "not exist")
@@ -89,7 +92,8 @@
                    (if (endswith path "/") 0 (set! path (+ path "/")))
                    (.log console path)
                    (def arr (.split path "/"))
-                   (def handler (aget routes (aget arr 0)))
+                   (.log console "arr is" arr)
+                   (def handler (aget routes (+ (aget arr 0) (aget arr 1))))
                    (def context {:parse_obj parse_obj :x-real-ip x-real-ip :request_url path})
                    (if handler (handler response context) (handle404 response 0))
                    )))

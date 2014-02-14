@@ -59,6 +59,7 @@
   (if (and (endswith request_url "/") (> (.-length request_url) 1))
     (set! request_url (.substr request_url 0 (- (.-length request_url) 1)))
     0)
+  (.log console "request_url is " request_url)
   (.get client request_url (fn [err, reply]
                                 (if (== err null)
                                   (if (== reply null)

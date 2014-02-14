@@ -5,7 +5,7 @@
 (def https (require "https"))
 (def client (.createClient (require "redis")))
 (def url (aget (.-argv process) 2))
-(def citr "citr/")
+(def citr "/citr/")
 
 (defn crawl_image [url]
   (def received 0)

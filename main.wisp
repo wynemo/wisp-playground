@@ -64,7 +64,9 @@
                                 (if (== err null)
                                   (if (== reply null)
                                     (.end r "not exist")
-                                    (.end r reply)
+                                    (do
+                                      (.end r reply "binary")
+                                      (.log console(.-length reply)))
                                     )
                                   (.end r "error")))))  
                                 

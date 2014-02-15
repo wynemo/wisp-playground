@@ -16,17 +16,26 @@
   (def name (aget arr (- (.-length arr) 1)))
   (def fucking_http (if (startswith url "https") https http))
   (def key (+ citr name))
+  (def current 0)
   (def req (.request fucking_http
                    url
                    (fn [response]
+                     (def headers (.-headers response))
+                     (def cl (aget headers "content-length"))
+                     (def buf (Buffer. (parseInt cl)))
+                     (.log console "cl is" cl)
                      (.on response
                           "data"
-                          (fn [chunk] 
-                            (.append client key chunk)
+                          (fn [chunk]
+                            (def len1 (.-length chunk))
+                            (.log console "current is" current)
+                            (.copy chunk buf current)
+                            (set! current (+ current len1))
                             ))
                      (.on response
                           "end"
                           (fn []
+                            (.set client key (.toString buf "binary"))
                             (.expire client key 3600)
                             (.log console "url is" (+ "https://ssl.dabin.info" key))
                             ))

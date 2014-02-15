@@ -20,22 +20,16 @@
   (def req (.request fucking_http
                    url
                    (fn [response]
-                     (def headers (.-headers response))
-                     (def cl (aget headers "content-length"))
-                     (def buf (Buffer. (parseInt cl)))
-                     (.log console "cl is" cl)
+                     (def bufarr [])
                      (.on response
                           "data"
                           (fn [chunk]
-                            (def len1 (.-length chunk))
-                            (.log console "current is" current)
-                            (.copy chunk buf current)
-                            (set! current (+ current len1))
+                            (.push bufarr chunk)
                             ))
                      (.on response
                           "end"
                           (fn []
-                            (.set client key (.toString buf "binary"))
+                            (.set client key (.toString (.concat Buffer bufarr) "binary"))
                             (.expire client key 3600)
                             (.log console "url is" (+ "https://ssl.dabin.info" key))
                             ))

@@ -65,6 +65,7 @@
                                   (if (== reply null)
                                     (.end r "not exist")
                                     (do
+                                      (.writeHead r 200 {:Content-Length (.-length reply)})
                                       (.end r reply "binary")
                                       (.log console(.-length reply)))
                                     )

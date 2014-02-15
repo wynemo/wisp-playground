@@ -15,27 +15,26 @@
   (def arr (.split url "/"))
   (def name (aget arr (- (.-length arr) 1)))
   (def fucking_http (if (startswith url "https") https http))
-  (def s "")
+  (def key (+ citr name))
   (def req (.request fucking_http
                    url
                    (fn [response]
                      (.on response
                           "data"
-                          (fn [chunk] (set! s (+ s chunk))))
+                          (fn [chunk] 
+                            (.append client key chunk)
+                            ))
                      (.on response
                           "end"
                           (fn []
-                            (def key (+ citr name))
-                            (.set client key s)
                             (.expire client key 3600)
-                            (.log console "url is" (+ "https://ssl.dabin.info/" key))
-                            (.exit process 0)))
+                            (.log console "url is" (+ "https://ssl.dabin.info" key))
+                            ))
                      )))
   (.on req
        "error"
        (fn [e]
          (.log console (.-message e))
-         (.exit process -1)
          ))
   (.end req))
 

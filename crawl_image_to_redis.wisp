@@ -29,10 +29,11 @@
                      (.on response
                           "end"
                           (fn []
-                            (.set client key (.toString (.concat Buffer bufarr) "binary"))
-                            (.expire client key 3600)
-                            (.log console "url is" (+ "https://ssl.dabin.info" key))
-                            (.exit process 0)
+                            (.set client key (.toString (.concat Buffer bufarr) "binary") (fn []
+                                                                                            (.expire client key 3600)
+                                                                                            (.log console "url is" (+ "https://ssl.dabin.info" key))
+                                                                                            (.exit process 0)
+                                                                                            ))
                             ))
                      )))
   (.on req

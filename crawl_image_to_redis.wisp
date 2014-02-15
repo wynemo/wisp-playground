@@ -32,12 +32,14 @@
                             (.set client key (.toString (.concat Buffer bufarr) "binary"))
                             (.expire client key 3600)
                             (.log console "url is" (+ "https://ssl.dabin.info" key))
+                            (.exit process 0)
                             ))
                      )))
   (.on req
        "error"
        (fn [e]
          (.log console (.-message e))
+         (.exit process -1)
          ))
   (.end req))
 

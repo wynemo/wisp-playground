@@ -3,6 +3,8 @@
 
 (def http (require "http"))
 (def https (require "https"))
+(def crypto (require "crypto"))
+
 (def client (.createClient (require "redis")))
 (def url (aget (.-argv process) 2))
 (def citr "/citr/")
@@ -12,8 +14,7 @@
   (if (and (endswith url "/") (> (.-length url) 1))
     (set! url (.substr url 0 (- (.-length url) 1)))
     0)
-  (def arr (.split url "/"))
-  (def name (aget arr (- (.-length arr) 1)))
+  (def name (.digest (.update (.createHash crypto "md5") url) "hex"))
   (def fucking_http (if (startswith url "https") https http))
   (def key (+ citr name))
   (def current 0)

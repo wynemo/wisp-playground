@@ -16,13 +16,17 @@
     0)
   (def name (.digest (.update (.createHash crypto "md5") url) "hex"))
   (def fucking_http (if (startswith url "https") https http))
-  (def key (+ citr name))
   (def current 0)
   (def req (.request fucking_http
                    url
                    (fn [response]
                      (.log console "status code is" (.-statusCode response))
                      (if (== 200 (.-statusCode response)) 0 (.exit process -1))
+                     (def ct (aget (.-headers response) "content-type"))
+                     (if (endswith ct "jpeg") (set! name ".jpg") 0)
+                     (if (endswith ct "png") (set! name ".png") 0)
+                     (if (endswith ct "gif") (set! name ".gif") 0)
+                     (def key (+ citr name))
                      (def bufarr [])
                      (.on response
                           "data"

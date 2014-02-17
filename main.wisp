@@ -65,9 +65,17 @@
   (.get client request_url (fn [err, reply]
                                 (if (== err null)
                                   (if (== reply null)
-                                    (.end r "not exist")
                                     (do
-                                      (.writeHead r 200 {:Content-Length (.-length reply)})
+                                      (.writeHead r 404 {})
+                                      (.end r "not exist")
+                                    )
+                                    (do
+                                      (def rh {})
+                                      (set! (aget rh "Content-Length") (.-length reply))
+                                      (if (endswith request_url "jpg") (set! (aget rh "Content-type") "image/jpeg") 0)
+                                      (if (endswith request_url "png") (set! (aget rh "Content-type") "image/png") 0)
+                                      (if (endswith request_url "gif") (set! (aget rh "Content-type") "image/gif") 0)
+                                      (.writeHead r 200 rh)
                                       (.end r reply "binary")
                                       (.log console(.-length reply)))
                                     )

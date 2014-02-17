@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>      
+        <title>crawl image</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="text/javascript" 
+            src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"> 
+        </script>
+    </head>
+    <body>
+
+
+    <form action='/crawlimage'>
+        <div>
+            <input id='crawlurl' type='text' value='' name='url'/><br>
+            <input type="checkbox" name="redis" value="1" checked>use redis<br>
+            <input type='submit' />
+        </div>
+    </form>
+    <div>
+        <a onclick="$('#crawlurl').val('');" href="#">clear url</a>
+    </div>
+
+
+    </body>
+</html>

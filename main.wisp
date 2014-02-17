@@ -5,6 +5,7 @@
 (def url (require "url"))
 (def geo (require "./geo"))
 (def index (require "./index"))
+(def crawl_imag_main (require "./crawl_imag_main"))
 
 (def uds "/tmp/reddit_asianhotties.sock")
 
@@ -38,21 +39,22 @@
 (defn handle_crawl_image [r context]
   (def parse_obj (aget context "parse_obj"))
   (def url (aget (.-query parse_obj) "url"))
-  (def to_redis (aget (.-query parse_obj) "redis"))
-  (.log console "url is" url)
-  (.log console "to_redis is" to_redis)
-  (def target (if to_redis "crawl_image_to_redis.js" "crawl_image.js"))
-  (.log console "target is" target)
-  (def crawl (.spawn cp "node" [target url]))
-  (.on (.-stdout crawl) "data" (fn [data] (
-                                 .write r data)))
-  (.on (.-stderr crawl) "data" (fn [data] (
-                                 .write r data)))
-  (.on crawl "close" (fn [code]
-                     (.log console "crawl_image code is " code)
-                     (.end r (+ "crawl_image code is " code))
-                     ))
-  )
+  (if url
+    (do
+      (def to_redis (aget (.-query parse_obj) "redis"))
+      (.log console "url is" url)
+      (.log console "to_redis is" to_redis)
+      (def target (if to_redis "crawl_image_to_redis.js" "crawl_image.js"))
+      (.log console "target is" target)
+      (def crawl (.spawn cp "node" [target url]))
+      (.on (.-stdout crawl) "data" (fn [data] (
+                                     .write r data)))
+      (.on (.-stderr crawl) "data" (fn [data] (
+                                     .write r data)))
+      (.on crawl "close" (fn [code]
+                         (.log console "crawl_image code is " code)
+                         (.end r (+ "crawl_image code is " code)))))
+    (.end r (.render_main crawl_imag_main))))
   
 (defn handle_citr [r context]
   (def request_url (aget context "request_url"))

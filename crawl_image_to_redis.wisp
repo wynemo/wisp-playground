@@ -21,6 +21,8 @@
   (def req (.request fucking_http
                    url
                    (fn [response]
+                     (.log console "status code is" (.-statusCode response))
+                     (if (== 200 (.-statusCode response)) 0 (.exit process -1))
                      (def bufarr [])
                      (.on response
                           "data"

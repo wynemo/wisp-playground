@@ -85,11 +85,10 @@
             )))
   )
 
+(.unref client)
 
 (crawl_reddit (fn [s]
               (parse_reddit s (fn [result]
                                 (def r_r (render_reddit result))
-                                (.set client "missingkey" r_r)
-                                (.expire client "missingkey" 3600)
-                                (.exit process 0) 
-                                ))))
+                                (.set client "missingkey" r_r (fn [] 
+                                                                (.expire client "missingkey" 3600)))))))

@@ -39,7 +39,6 @@
                             (.set client key (.toString (.concat Buffer bufarr) "binary") (fn []
                                                                                             (.expire client key 3600)
                                                                                             (.log console "url is" (+ "https://ssl.dabin.info" key))
-                                                                                            (.exit process 0)
                                                                                             ))
                             ))
                      )))
@@ -51,4 +50,5 @@
          ))
   (.end req))
 
+(.unref client)
 (crawl_image url)

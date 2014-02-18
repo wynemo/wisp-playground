@@ -18,17 +18,17 @@
   (def hostname "www.reddit.com")
   (def path "/r/AsianHotties")
   (def options {hostname hostname path path headers headers})
-  (def s "")
   (def req (.request http
                    options
                    (fn [response]
+                     (def bufarr [])
                      (.on response
                           "data"
-                          (fn [chunk] (set! s (+ s chunk))))
+                          (fn [chunk] (.push bufarr chunk)))
                      (.on response
                           "end"
                           (fn []
-                            (cb s)))
+                            (cb (.toString (.concat Buffer bufarr) "binary"))))
                      )))
   (.on req
        "error"

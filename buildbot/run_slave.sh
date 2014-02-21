@@ -1,2 +1,2 @@
 cd ~
-exec ~/sandbox/bin/buildslave restart wisp-slave
+exec ~/sandbox/bin/buildslave restart ~/wisp-slave

@@ -1,0 +1,29 @@
+# cd /tmp
+# wget --no-check-certificate https://pypi.python.org/packages/source/s/setuptools/setuptools-1.1.7.tar.gz
+# wget --no-check-certificate https://pypi.python.org/packages/source/p/pip/pip-1.4.1.tar.gz
+# tar zxvf pip-1.4.1.tar.gz
+# tar zxvf setuptools-1.1.7.tar.gz
+# cd setuptools-1.1.7
+# python setup.py install
+# cd -
+# cd pip-1.4.1
+# python setup.py install
+# cd -
+
+# pip install virtualenv
+$ cd ~
+$ virtualenv sandbox
+$ . ~/sandbox/bin/activate
+$ pip install SQLAlchemy==0.7.9
+$ pip install buildbot==0.8.8
+$ pip install buildbot-slave==0.8.8
+$ deactivate
+
+$ buildbot create-master wisp-play-master
+$ mv wisp-play-master/master.cfg.sample wisp-play-master/master.cfg
+
+edit wisp-play-master/master.cfg
+
+$ buildbot start /home/zdb/wisp-play-master
+$ buildslave create-slave wisp-slave localhost:9989 wisp-slave pass
+$ buildslave start wisp-slave

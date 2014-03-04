@@ -88,11 +88,23 @@
     
 (defn handle_index [r context]
   (.end r (.render_index index undefined)))
+  
+(defn handle_ahjson [r context]
+  (.get client "ah-json" (fn [err, reply]
+                            (if (== err null)
+                              (if (== reply null)
+                                (do
+                                  (.writeHead r 404 {})
+                                  (.end r "not exist")
+                                )
+                                (.end r reply))
+                              (.end r "error")))))
                                 
 (def routes
   {"AsianHotties" (fn [r c] (get_reddit r  c))
    "crawlimage" (fn [r c] (handle_crawl_image r c))
    "citr" (fn [r c] (handle_citr r c))
+   "ahjson" (fn [r c] (handle_ahjson r c))
    "" (fn [r c] (handle_index r c))
    })
 

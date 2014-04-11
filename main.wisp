@@ -93,10 +93,13 @@
   (.get client "ah-json" (fn [err, reply]
                             (if (== err null)
                               (if (== reply null)
-                                (do
-                                  (.writeHead r 404 {})
-                                  (.end r "not exist")
-                                )
+                                       (do
+                                        (def crawl (.spawn cp "node" ["crawl_asianhotties.js"]))
+                                        (.on crawl "close" (fn [code]
+                                                             (.log console "code is " code)
+                                                             (.get client "ah-json" (fn [err, reply](
+                                                                .end r reply)))))
+                                        )
                                 (.end r reply))
                               (.end r "error")))))
                                 

@@ -5,10 +5,8 @@ wisp dummy code
 
 install requirements::
 
-    npm install wisp
-    npm install jsdom
-    npm install swig
-    npm install redis
+    npm i
+    sudo npm i -g wisp
 
 compile wisp files to javascript::    
     

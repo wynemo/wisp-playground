@@ -1,0 +1,14 @@
+$ export EDITOR=vi
+$ crontab -u zdb -e
+
+    HOME=/home/zdb
+    PATH=/usr/local/bin:/usr/bin:/bin
+
+    0 * * * * node /home/zdb/wisp-play/crawl_asianhotties.js
+    
+    
+$ vi /home/zdb/wisp-play/cron.sh
+    
+    cd ~/wisp-play
+    node crawl_asianhotties.js
+

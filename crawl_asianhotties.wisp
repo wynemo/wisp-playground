@@ -28,7 +28,7 @@
                      (.on response
                           "end"
                           (fn []
-                            (cb (.toString (.concat Buffer bufarr) "binary"))))
+                            (cb (.toString (.concat Buffer bufarr)))))
                      )))
   (.on req
        "error"
